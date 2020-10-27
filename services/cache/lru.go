@@ -217,9 +217,13 @@ func (l *LRU) get(key string, value interface{}) error {
 			*v = &u
 			return err
 		case **model.Session:
-			var s model.Session
-			_, err := s.UnmarshalMsg(e.value)
-			*v = &s
+			// var s model.Session
+			// _, err := v.UnmarshalMsg(e.value)
+			// *v = &s
+			// cast into a session object
+			a := *(interface{}(v)).(**model.Session)
+			_, err := a.UnmarshalMsg(e.value)
+			// _, err :=
 			return err
 		}
 

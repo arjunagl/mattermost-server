@@ -7,6 +7,7 @@ import (
 	"errors"
 	"math"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/mattermost/mattermost-server/v5/audit"
@@ -34,10 +35,17 @@ func (a *App) CreateSession(session *model.Session) (*model.Session, *model.AppE
 	return session, nil
 }
 
+var UserSessionPool = sync.Pool{
+	New: func() interface{} {
+		return &model.Session{}
+	},
+}
+
 func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	metrics := a.Metrics()
 
-	var session *model.Session
+	// var session *model.Session
+	var session = UserSessionPool.Get().(*model.Session)
 	var err *model.AppError
 	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
 		if metrics != nil {
