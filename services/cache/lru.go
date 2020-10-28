@@ -220,10 +220,8 @@ func (l *LRU) get(key string, value interface{}) error {
 			// var s model.Session
 			// _, err := v.UnmarshalMsg(e.value)
 			// *v = &s
-			// cast into a session object
 			a := *(interface{}(v)).(**model.Session)
 			_, err := a.UnmarshalMsg(e.value)
-			// _, err :=
 			return err
 		}
 
