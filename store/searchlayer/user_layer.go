@@ -5,6 +5,7 @@ package searchlayer
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -80,11 +81,14 @@ func (s *SearchUserStore) Update(user *model.User, trustedUpdateData bool) (*mod
 }
 
 func (s *SearchUserStore) Save(user *model.User) (*model.User, error) {
+	fmt.Printf("UserStore saving %+v", user)
 	nuser, err := s.UserStore.Save(user)
 
 	if err == nil {
 		s.rootStore.indexUser(nuser)
 	}
+
+	fmt.Printf("Error after saving %+v", err)
 	return nuser, err
 }
 

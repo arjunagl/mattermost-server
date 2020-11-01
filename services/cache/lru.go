@@ -5,6 +5,7 @@ package cache
 
 import (
 	"container/list"
+	"fmt"
 	"sync"
 	"time"
 
@@ -186,6 +187,7 @@ func (l *LRU) set(key string, value interface{}, ttl time.Duration) error {
 }
 
 func (l *LRU) get(key string, value interface{}) error {
+
 	if ent, ok := l.items[key]; ok {
 		e := ent.Value.(*entry)
 
@@ -202,6 +204,8 @@ func (l *LRU) get(key string, value interface{}) error {
 			return err
 		}
 
+		fmt.Println("Testing again11111...")
+
 		// This is ugly and makes the cache package aware of the model package.
 		// But this is due to 2 things.
 		// 1. The msgp package works on methods on structs rather than functions.
@@ -217,10 +221,14 @@ func (l *LRU) get(key string, value interface{}) error {
 			*v = &u
 			return err
 		case **model.Session:
+			// fmt.Println("Testing again1111234...")
 			// var s model.Session
-			// _, err := v.UnmarshalMsg(e.value)
+			// _, err := s.UnmarshalMsg(e.value)
 			// *v = &s
+			// return err
+
 			a := *(interface{}(v)).(**model.Session)
+			fmt.Printf("a value = %v ", a)
 			_, err := a.UnmarshalMsg(e.value)
 			return err
 		}

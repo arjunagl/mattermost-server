@@ -45,19 +45,19 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	metrics := a.Metrics()
 
 	var session = UserSessionPool.Get().(*model.Session)
-	session.Id = ""
-	session.Token = ""
-	session.CreateAt = 0
-	session.ExpiresAt = 0
-	session.LastActivityAt = 0
-	session.UserId = ""
-	session.DeviceId = ""
-	session.Roles = ""
-	session.IsOAuth = false
-	session.ExpiredNotify = false
-	session.Props = nil
-	session.TeamMembers = nil
-	session.Local = false
+	// session.Id = ""
+	// session.Token = ""
+	// session.CreateAt = 0
+	// session.ExpiresAt = 0
+	// session.LastActivityAt = 0
+	// session.UserId = ""
+	// session.DeviceId = ""
+	// session.Roles = ""
+	// session.IsOAuth = false
+	// session.ExpiredNotify = false
+	// session.Props = nil
+	// session.TeamMembers = nil
+	// session.Local = false
 
 	var err *model.AppError
 	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
