@@ -204,8 +204,6 @@ func (l *LRU) get(key string, value interface{}) error {
 			return err
 		}
 
-		fmt.Println("Testing again11111...")
-
 		// This is ugly and makes the cache package aware of the model package.
 		// But this is due to 2 things.
 		// 1. The msgp package works on methods on structs rather than functions.
@@ -221,14 +219,15 @@ func (l *LRU) get(key string, value interface{}) error {
 			*v = &u
 			return err
 		case **model.Session:
-			// fmt.Println("Testing again1111234...")
-			// var s model.Session
+
+			var s model.Session
+			fmt.Printf("From s model %+v", s)
 			// _, err := s.UnmarshalMsg(e.value)
 			// *v = &s
 			// return err
 
 			a := *(interface{}(v)).(**model.Session)
-			fmt.Printf("a value = %v ", a)
+			fmt.Printf("From a model %+v ", a)
 			_, err := a.UnmarshalMsg(e.value)
 			return err
 		}
