@@ -221,13 +221,13 @@ func (l *LRU) get(key string, value interface{}) error {
 		case **model.Session:
 
 			var s model.Session
-			fmt.Printf("From s model %+v", s)
+			fmt.Printf("From s model %+v\n", s)
 			// _, err := s.UnmarshalMsg(e.value)
 			// *v = &s
 			// return err
 
 			a := *(interface{}(v)).(**model.Session)
-			fmt.Printf("From a model %+v ", a)
+			fmt.Printf("From a model %+v\n", a)
 			_, err := a.UnmarshalMsg(e.value)
 			return err
 		}
