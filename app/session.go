@@ -60,7 +60,7 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	session.Local = false
 
 	var err *model.AppError
-	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
+	if err := a.Srv().sessionCache.Get(token, session); err == nil {
 		if metrics != nil {
 			metrics.IncrementMemCacheHitCounterSession()
 		}

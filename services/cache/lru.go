@@ -5,7 +5,6 @@ package cache
 
 import (
 	"container/list"
-	"fmt"
 	"sync"
 	"time"
 
@@ -218,16 +217,8 @@ func (l *LRU) get(key string, value interface{}) error {
 			_, err := u.UnmarshalMsg(e.value)
 			*v = &u
 			return err
-		case **model.Session:
-
-			var s model.Session
-			fmt.Printf("From s model %+v\n", s)
-			// _, err := s.UnmarshalMsg(e.value)
-			// *v = &s
-			// return err
-
-			a := *(interface{}(v)).(**model.Session)
-			fmt.Printf("From a model %+v\n", a)
+		case *model.Session:
+			a := (interface{}(v)).(*model.Session)
 			_, err := a.UnmarshalMsg(e.value)
 			return err
 		}
