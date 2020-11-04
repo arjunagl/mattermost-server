@@ -217,10 +217,6 @@ func (l *LRU) get(key string, value interface{}) error {
 			_, err := u.UnmarshalMsg(e.value)
 			*v = &u
 			return err
-		case *model.Session:
-			a := (interface{}(v)).(*model.Session)
-			_, err := a.UnmarshalMsg(e.value)
-			return err
 		}
 
 		// Slow path for other structs.
