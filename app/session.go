@@ -44,10 +44,11 @@ var UserSessionPool = sync.Pool{
 func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	metrics := a.Metrics()
 
-	var session = UserSessionPool.Get().(*model.Session)
+	// var session = UserSessionPool.Get().(*model.Session)
+	var session *model.Session
 
 	var err *model.AppError
-	if err := a.Srv().sessionCache.Get(token, session); err == nil {
+	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
 		if metrics != nil {
 			metrics.IncrementMemCacheHitCounterSession()
 		}

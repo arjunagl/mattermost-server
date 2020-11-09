@@ -217,6 +217,11 @@ func (l *LRU) get(key string, value interface{}) error {
 			_, err := u.UnmarshalMsg(e.value)
 			*v = &u
 			return err
+		case **model.Session:
+			var s model.Session
+			_, err := s.UnmarshalMsg(e.value)
+			*v = &s
+			return err
 		case *map[string]*model.User:
 			var u model.UserMap
 			_, err := u.UnmarshalMsg(e.value)
