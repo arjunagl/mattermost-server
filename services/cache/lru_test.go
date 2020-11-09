@@ -229,11 +229,8 @@ func TestLRUMarshalUnMarshal(t *testing.T) {
 	err = l.Set("session", session)
 	require.Nil(t, err)
 
-	// var s = &model.Session{}
-	// err = l.Get("session", s)
-
-	var s *model.Session
-	err = l.Get("session", &s)
+	var s = &model.Session{}
+	err = l.Get("session", s)
 
 	require.Nil(t, err)
 	require.Equal(t, session, s)
