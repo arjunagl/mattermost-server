@@ -1321,6 +1321,7 @@ func updateUserActive(c *Context, w http.ResponseWriter, r *http.Request) {
 	isSelfDeactive := !active && c.Params.UserId == c.App.Session().UserId
 
 	if !isSelfDeactive && !c.App.SessionHasPermissionTo(*c.App.Session(), model.PERMISSION_SYSCONSOLE_WRITE_USERMANAGEMENT_USERS) {
+		fmt.Println("9999999999999999999999")
 		c.Err = model.NewAppError("updateUserActive", "api.user.update_active.permissions.app_error", nil, "userId="+c.Params.UserId, http.StatusForbidden)
 		return
 	}

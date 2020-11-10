@@ -102,6 +102,7 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 	options = append(options, app.StoreOverride(dbStore))
 
 	s, err := app.NewServer(options...)
+
 	if err != nil {
 		panic(err)
 	}
@@ -179,7 +180,6 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 	if th.tempWorkspace == "" {
 		th.tempWorkspace = tempWorkspace
 	}
-
 	th.App.InitServer()
 
 	return th

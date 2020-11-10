@@ -298,6 +298,7 @@ func postLog(c *Context, w http.ResponseWriter, r *http.Request) {
 
 	if !*c.App.Config().ServiceSettings.EnableDeveloper {
 		if c.App.Session().UserId == "" {
+			fmt.Println("8888888888888888888")
 			c.Err = model.NewAppError("postLog", "api.context.permissions.app_error", nil, "", http.StatusForbidden)
 			return
 		}

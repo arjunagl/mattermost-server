@@ -194,7 +194,9 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if err.StatusCode == http.StatusInternalServerError {
 				c.Err = err
 			} else if h.RequireSession {
+				fmt.Println("abcdefgh")
 				c.RemoveSessionCookie(w, r)
+				fmt.Println("3333333333333333")
 				c.Err = model.NewAppError("ServeHTTP", "api.context.session_expired.app_error", nil, "token="+token, http.StatusUnauthorized)
 			}
 		} else if !session.IsOAuth && tokenLocation == app.TokenLocationQueryString {
@@ -220,6 +222,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if c.Err == nil && h.RequireSession {
+		fmt.Println("Checking if session required")
 		c.SessionRequired()
 	}
 
@@ -252,6 +255,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		c.Err.RequestId = c.App.RequestId()
 
 		if c.Err.Id == "api.context.session_expired.app_error" {
+			fmt.Println("44444444444444444444")
 			c.LogInfo(c.Err)
 		} else {
 			c.LogError(c.Err)
@@ -336,6 +340,7 @@ func (h *Handler) checkCSRFToken(c *Context, r *http.Request, token string, toke
 		}
 
 		if !csrfCheckPassed {
+			fmt.Print("aaaaaaaaaa")
 			c.App.SetSession(&model.Session{})
 			c.Err = model.NewAppError("ServeHTTP", "api.context.session_expired.app_error", nil, "token="+token+" Appears to be a CSRF attempt", http.StatusUnauthorized)
 		}
