@@ -101,6 +101,7 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 	options = append(options, app.ConfigStore(configStore))
 	options = append(options, app.StoreOverride(dbStore))
 
+	fmt.Println("Setting up test helper")
 	s, err := app.NewServer(options...)
 
 	if err != nil {
@@ -204,6 +205,7 @@ func SetupEnterprise(tb testing.TB) *TestHelper {
 }
 
 func Setup(tb testing.TB) *TestHelper {
+	fmt.Println("Setting up")
 	if testing.Short() {
 		tb.SkipNow()
 	}
@@ -240,6 +242,7 @@ func SetupConfig(tb testing.TB, updateConfig func(cfg *model.Config)) *TestHelpe
 }
 
 func SetupConfigWithStoreMock(tb testing.TB, updateConfig func(cfg *model.Config)) *TestHelper {
+	fmt.Println("setting up configstore with mock")
 	th := setupTestHelper(testlib.GetMockStoreForSetupFunctions(), nil, false, false, updateConfig)
 	emptyMockStore := mocks.Store{}
 	emptyMockStore.On("Close").Return(nil)
@@ -248,6 +251,7 @@ func SetupConfigWithStoreMock(tb testing.TB, updateConfig func(cfg *model.Config
 }
 
 func SetupWithStoreMock(tb testing.TB) *TestHelper {
+	fmt.Println("SetupWithStoreMock")
 	th := setupTestHelper(testlib.GetMockStoreForSetupFunctions(), nil, false, false, nil)
 	emptyMockStore := mocks.Store{}
 	emptyMockStore.On("Close").Return(nil)
