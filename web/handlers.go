@@ -189,7 +189,8 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if len(token) != 0 {
 		session, err := c.App.GetSession(token)
-		defer app.UserSessionPool.Put(session)
+		fmt.Printf("Error received = %+v, %+v \n", err, session)
+		// defer app.UserSessionPool.Put(session)
 
 		if err != nil {
 			c.Log.Info("Invalid session", mlog.Err(err))
@@ -202,9 +203,10 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				c.Err = model.NewAppError("ServeHTTP", "api.context.session_expired.app_error", nil, "token="+token, http.StatusUnauthorized)
 			}
 		} else if !session.IsOAuth && tokenLocation == app.TokenLocationQueryString {
+			fmt.Println(";;;;;;;;;;;;;;;;;;;;")
 			c.Err = model.NewAppError("ServeHTTP", "api.context.token_provided.app_error", nil, "token="+token, http.StatusUnauthorized)
 		} else {
-			fmt.Println("Setting1 %+v\n\n")
+			fmt.Println("Setting1 %+v\n\n") // working code hits here
 			c.App.SetSession(session)
 		}
 
