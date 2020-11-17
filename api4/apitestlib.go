@@ -205,7 +205,6 @@ func SetupEnterprise(tb testing.TB) *TestHelper {
 }
 
 func Setup(tb testing.TB) *TestHelper {
-	fmt.Println("Setting up")
 	if testing.Short() {
 		tb.SkipNow()
 	}
@@ -355,6 +354,7 @@ func (me *TestHelper) InitLogin() *TestHelper {
 func (me *TestHelper) InitBasic() *TestHelper {
 	me.BasicTeam = me.CreateTeam()
 	me.BasicChannel = me.CreatePublicChannel()
+	fmt.Println("Done setting up")
 	me.BasicPrivateChannel = me.CreatePrivateChannel()
 	me.BasicPrivateChannel2 = me.CreatePrivateChannel()
 	me.BasicDeletedChannel = me.CreatePublicChannel()
@@ -518,6 +518,7 @@ func (me *TestHelper) CreateChannelWithClientAndTeam(client *model.Client4, chan
 	}
 
 	utils.DisableDebugLogForTest()
+
 	rchannel, resp := client.CreateChannel(channel)
 	if resp.Error != nil {
 		panic(resp.Error)
