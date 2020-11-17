@@ -188,10 +188,8 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	token, tokenLocation := app.ParseAuthTokenFromRequest(r)
 
 	if len(token) != 0 {
-		session, err := c.App.GetSession(token)
+		session, err := c.App.GetSession(token) // this is where the problem is
 		fmt.Printf("Error received = %+v, %+v \n", err, session)
-		// defer app.UserSessionPool.Put(session)
-
 		if err != nil {
 			c.Log.Info("Invalid session", mlog.Err(err))
 			if err.StatusCode == http.StatusInternalServerError {
@@ -206,7 +204,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(";;;;;;;;;;;;;;;;;;;;")
 			c.Err = model.NewAppError("ServeHTTP", "api.context.token_provided.app_error", nil, "token="+token, http.StatusUnauthorized)
 		} else {
-			fmt.Println("Setting1 %+v\n\n") // working code hits here
+			fmt.Printf("Setting1 %+v\n\n", session)
 			c.App.SetSession(session)
 		}
 
