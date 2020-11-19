@@ -5,6 +5,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"net/http"
 	"sync"
@@ -45,10 +46,12 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	// This is where the problem is <STOP>, switch between the two branches and see
 	metrics := a.Metrics()
 
-	var session = UserSessionPool.Get().(*model.Session)
+	// var session = UserSessionPool.Get().(*model.Session)
+	var session *model.Session
+	fmt.Printf("Obtained session = %+v\n", session)
 
 	var err *model.AppError
-	if err := a.Srv().sessionCache.Get(token, session); err == nil {
+	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
 		if metrics != nil {
 			metrics.IncrementMemCacheHitCounterSession()
 		}
