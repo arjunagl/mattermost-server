@@ -46,11 +46,12 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	// This is where the problem is <STOP>, switch between the two branches and see
 	metrics := a.Metrics()
 
-	// var session = UserSessionPool.Get().(*model.Session)
-	var session *model.Session
+	var session = UserSessionPool.Get().(*model.Session)
+	// var session *model.Session
 	fmt.Printf("Obtained session = %+v\n", session)
 
 	var err *model.AppError
+	fmt.Printf("Sending to unmarshal type %T\n", session)
 	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
 		if metrics != nil {
 			metrics.IncrementMemCacheHitCounterSession()
