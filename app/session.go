@@ -51,7 +51,6 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	// fmt.Printf("Obtained session = %+v\n", &session)
 
 	var err *model.AppError
-	fmt.Printf("Sending to unmarshal type %T\n", session)
 	if err := a.Srv().sessionCache.Get(token, &session); err == nil {
 		if metrics != nil {
 			metrics.IncrementMemCacheHitCounterSession()
@@ -62,6 +61,7 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 		}
 	}
 
+	fmt.Printf("Session obtained %v %+v", token, session)
 	if session == nil {
 		var nErr error
 		if session, nErr = a.Srv().Store.Session().Get(token); nErr == nil {
