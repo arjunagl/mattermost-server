@@ -195,16 +195,12 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if err.StatusCode == http.StatusInternalServerError {
 				c.Err = err
 			} else if h.RequireSession {
-				fmt.Println("abcdefgh")
 				c.RemoveSessionCookie(w, r)
-				fmt.Println("3333333333333333")
 				c.Err = model.NewAppError("ServeHTTP", "api.context.session_expired.app_error", nil, "token="+token, http.StatusUnauthorized)
 			}
 		} else if !session.IsOAuth && tokenLocation == app.TokenLocationQueryString {
-			fmt.Println(";;;;;;;;;;;;;;;;;;;;")
 			c.Err = model.NewAppError("ServeHTTP", "api.context.token_provided.app_error", nil, "token="+token, http.StatusUnauthorized)
 		} else {
-			fmt.Printf("Setting1 %+v\n\n", session)
 			c.App.SetSession(session)
 		}
 
@@ -225,7 +221,6 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if c.Err == nil && h.RequireSession {
-		fmt.Println("Checking if session required")
 		c.SessionRequired()
 	}
 
@@ -259,7 +254,6 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		c.Err.RequestId = c.App.RequestId()
 
 		if c.Err.Id == "api.context.session_expired.app_error" {
-			fmt.Println("44444444444444444444")
 			c.LogInfo(c.Err)
 		} else {
 			c.LogError(c.Err)

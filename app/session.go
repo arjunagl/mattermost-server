@@ -48,7 +48,7 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 
 	var session = UserSessionPool.Get().(*model.Session)
 	// var session *model.Session
-	fmt.Printf("Obtained session = %+v\n", session)
+	// fmt.Printf("Obtained session = %+v\n", &session)
 
 	var err *model.AppError
 	fmt.Printf("Sending to unmarshal type %T\n", session)

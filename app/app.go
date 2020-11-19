@@ -653,7 +653,6 @@ func (a *App) Context() context.Context {
 }
 
 func (a *App) SetSession(s *model.Session) {
-	fmt.Println("Setting session %+v", s)
 	a.session = *s
 }
 

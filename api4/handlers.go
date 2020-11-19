@@ -4,7 +4,6 @@
 package api4
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/NYTimes/gziphandler"
@@ -35,7 +34,6 @@ func (api *API) ApiHandler(h func(*Context, http.ResponseWriter, *http.Request))
 // ApiSessionRequired provides a handler for API endpoints which require the user to be logged in in order for access to
 // be granted.
 func (api *API) ApiSessionRequired(h func(*Context, http.ResponseWriter, *http.Request)) http.Handler {
-	fmt.Println("Inside session required")
 	handler := &web.Handler{
 		GetGlobalAppOptions: api.GetGlobalAppOptions,
 		HandleFunc:          h,

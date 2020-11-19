@@ -199,7 +199,6 @@ func (l *LRU) get(key string, value interface{}) error {
 
 		// We use a fast path for hot structs.
 		if msgpVal, ok := value.(msgp.Unmarshaler); ok {
-			fmt.Println("Unmarshalling")
 			_, err := msgpVal.UnmarshalMsg(e.value)
 			return err
 		}
@@ -218,13 +217,13 @@ func (l *LRU) get(key string, value interface{}) error {
 			_, err := u.UnmarshalMsg(e.value)
 			*v = &u
 			return err
-		case **model.Session:
-			fmt.Println("Unmarshalling session")
-			var s model.Session
-			_, err := s.UnmarshalMsg(e.value)
-			*v = &s
-			fmt.Printf("After unmarshalling %+v\n", *v)
-			return err
+		// case **model.Session:
+		// 	fmt.Println("Unmarshalling session")
+		// 	var s model.Session
+		// 	_, err := s.UnmarshalMsg(e.value)
+		// 	*v = &s
+		// 	fmt.Printf("After unmarshalling %+v\n", *v)
+		// 	return err
 		case *map[string]*model.User:
 			var u model.UserMap
 			_, err := u.UnmarshalMsg(e.value)
@@ -233,9 +232,8 @@ func (l *LRU) get(key string, value interface{}) error {
 		}
 
 		// Slow path for other structs.
+		fmt.Println("Inside the slow path")
 		return msgpack.Unmarshal(e.value, value)
-	} else {
-		fmt.Println("Inside the else portion")
 	}
 	return ErrKeyNotFound
 }
