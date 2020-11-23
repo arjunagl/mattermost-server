@@ -7,11 +7,8 @@ import (
 	"errors"
 	"math"
 	"net/http"
-<<<<<<< HEAD
-	"sync"
-=======
 	"os"
->>>>>>> upstream/master
+	"sync"
 	"time"
 
 	"github.com/mattermost/mattermost-server/v5/audit"
