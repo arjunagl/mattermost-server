@@ -7,7 +7,11 @@ import (
 	"errors"
 	"math"
 	"net/http"
+<<<<<<< HEAD
 	"sync"
+=======
+	"os"
+>>>>>>> upstream/master
 	"time"
 
 	"github.com/mattermost/mattermost-server/v5/audit"
@@ -39,6 +43,21 @@ var UserSessionPool = sync.Pool{
 	New: func() interface{} {
 		return &model.Session{Id: ""}
 	},
+}
+
+func (a *App) GetCloudSession(token string) (*model.Session, *model.AppError) {
+	apiKey := os.Getenv("MM_CLOUD_API_KEY")
+	if apiKey != "" && apiKey == token {
+		// Need a bare-bones session object for later checks
+		session := &model.Session{
+			Token:   token,
+			IsOAuth: false,
+		}
+
+		session.AddProp(model.SESSION_PROP_TYPE, model.SESSION_TYPE_CLOUD_KEY)
+		return session, nil
+	}
+	return nil, model.NewAppError("GetCloudSession", "api.context.invalid_token.error", map[string]interface{}{"Token": token, "Error": ""}, "The provided token is invalid", http.StatusUnauthorized)
 }
 
 func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
