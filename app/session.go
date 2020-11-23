@@ -5,7 +5,6 @@ package app
 
 import (
 	"errors"
-	"fmt"
 	"math"
 	"net/http"
 	"sync"
@@ -47,7 +46,6 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 	metrics := a.Metrics()
 
 	var session = UserSessionPool.Get().(*model.Session)
-	// var session *model.Session
 
 	var err *model.AppError
 	if err := a.Srv().sessionCache.Get(token, session); err == nil {
@@ -60,8 +58,6 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 		}
 	}
 
-	fmt.Printf("Session obtained %v %+v", token, session)
-	// if session == nil {
 	if session.Id == "" {
 		var nErr error
 		if session, nErr = a.Srv().Store.Session().Get(token); nErr == nil {
