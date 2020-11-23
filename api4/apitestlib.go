@@ -178,6 +178,7 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 	if th.tempWorkspace == "" {
 		th.tempWorkspace = tempWorkspace
 	}
+
 	th.App.InitServer()
 
 	return th
