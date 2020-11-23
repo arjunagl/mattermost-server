@@ -109,7 +109,6 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 	}
 
 	s, err := app.NewServer(options...)
-
 	if err != nil {
 		panic(err)
 	}

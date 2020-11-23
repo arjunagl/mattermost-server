@@ -85,7 +85,6 @@ func (s *SearchUserStore) Save(user *model.User) (*model.User, error) {
 	if err == nil {
 		s.rootStore.indexUser(nuser)
 	}
-
 	return nuser, err
 }
 
