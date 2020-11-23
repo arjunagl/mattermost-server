@@ -80,7 +80,6 @@ func (a *App) TotalWebsocketConnections() int {
 func (a *App) HubStart() {
 	// Total number of hubs is twice the number of CPUs.
 	numberOfHubs := runtime.NumCPU() * 2
-
 	mlog.Info("Starting websocket hubs", mlog.Int("number_of_hubs", numberOfHubs))
 
 	hubs := make([]*Hub, numberOfHubs)

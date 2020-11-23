@@ -281,7 +281,6 @@ func (wc *WebConn) IsAuthenticated() bool {
 		}
 
 		session, err := wc.App.GetSession(wc.GetSessionToken())
-
 		if err != nil {
 			mlog.Error("Invalid session.", mlog.Err(err))
 			wc.SetSessionToken("")

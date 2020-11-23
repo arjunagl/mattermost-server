@@ -42,7 +42,6 @@ var UserSessionPool = sync.Pool{
 }
 
 func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
-	// This is where the problem is <STOP>, switch between the two branches and see
 	metrics := a.Metrics()
 
 	var session = UserSessionPool.Get().(*model.Session)
