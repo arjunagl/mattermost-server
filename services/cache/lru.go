@@ -5,7 +5,6 @@ package cache
 
 import (
 	"container/list"
-	"fmt"
 	"sync"
 	"time"
 
@@ -218,11 +217,9 @@ func (l *LRU) get(key string, value interface{}) error {
 			*v = &u
 			return err
 		// case **model.Session:
-		// 	fmt.Println("Unmarshalling session")
 		// 	var s model.Session
 		// 	_, err := s.UnmarshalMsg(e.value)
 		// 	*v = &s
-		// 	fmt.Printf("After unmarshalling %+v\n", *v)
 		// 	return err
 		case *map[string]*model.User:
 			var u model.UserMap
@@ -232,7 +229,6 @@ func (l *LRU) get(key string, value interface{}) error {
 		}
 
 		// Slow path for other structs.
-		fmt.Println("Inside the slow path")
 		return msgpack.Unmarshal(e.value, value)
 	}
 	return ErrKeyNotFound

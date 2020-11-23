@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/mattermost/mattermost-server/v5/model"
@@ -18,22 +19,22 @@ import (
 )
 
 func TestCreateBot(t *testing.T) {
-	// t.Run("create bot without permissions", func(t *testing.T) {
-	// 	th := Setup(t)
-	// 	defer th.TearDown()
+	t.Run("create bot without permissions", func(t *testing.T) {
+		th := Setup(t)
+		defer th.TearDown()
 
-	// 	th.App.UpdateConfig(func(cfg *model.Config) {
-	// 		*cfg.ServiceSettings.EnableBotAccountCreation = true
-	// 	})
+		th.App.UpdateConfig(func(cfg *model.Config) {
+			*cfg.ServiceSettings.EnableBotAccountCreation = true
+		})
 
-	// 	_, resp := th.Client.CreateBot(&model.Bot{
-	// 		Username:    GenerateTestUsername(),
-	// 		DisplayName: "a bot",
-	// 		Description: "bot",
-	// 	})
+		_, resp := th.Client.CreateBot(&model.Bot{
+			Username:    GenerateTestUsername(),
+			DisplayName: "a bot",
+			Description: "bot",
+		})
 
-	// 	CheckErrorMessage(t, resp, "api.context.permissions.app_error")
-	// })
+		CheckErrorMessage(t, resp, "api.context.permissions.app_error")
+	})
 
 	t.Run("create bot without config permissions", func(t *testing.T) {
 		th := Setup(t).InitBasic()
@@ -52,85 +53,85 @@ func TestCreateBot(t *testing.T) {
 		CheckErrorMessage(t, resp, "api.bot.create_disabled")
 	})
 
-	// t.Run("create bot with permissions", func(t *testing.T) {
-	// 	th := Setup(t).InitBasic()
-	// 	defer th.TearDown()
-	// 	defer th.RestoreDefaultRolePermissions(th.SaveDefaultRolePermissions())
+	t.Run("create bot with permissions", func(t *testing.T) {
+		th := Setup(t).InitBasic()
+		defer th.TearDown()
+		defer th.RestoreDefaultRolePermissions(th.SaveDefaultRolePermissions())
 
-	// 	th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
-	// 	th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID, false)
-	// 	th.App.UpdateConfig(func(cfg *model.Config) {
-	// 		*cfg.ServiceSettings.EnableBotAccountCreation = true
-	// 	})
+		th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
+		th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID, false)
+		th.App.UpdateConfig(func(cfg *model.Config) {
+			*cfg.ServiceSettings.EnableBotAccountCreation = true
+		})
 
-	// 	bot := &model.Bot{
-	// 		Username:    GenerateTestUsername(),
-	// 		DisplayName: "a bot",
-	// 		Description: "bot",
-	// 	}
+		bot := &model.Bot{
+			Username:    GenerateTestUsername(),
+			DisplayName: "a bot",
+			Description: "bot",
+		}
 
-	// 	createdBot, resp := th.Client.CreateBot(bot)
-	// 	CheckCreatedStatus(t, resp)
-	// 	defer th.App.PermanentDeleteBot(createdBot.UserId)
-	// 	require.Equal(t, bot.Username, createdBot.Username)
-	// 	require.Equal(t, bot.DisplayName, createdBot.DisplayName)
-	// 	require.Equal(t, bot.Description, createdBot.Description)
-	// 	require.Equal(t, th.BasicUser.Id, createdBot.OwnerId)
-	// })
+		createdBot, resp := th.Client.CreateBot(bot)
+		CheckCreatedStatus(t, resp)
+		defer th.App.PermanentDeleteBot(createdBot.UserId)
+		require.Equal(t, bot.Username, createdBot.Username)
+		require.Equal(t, bot.DisplayName, createdBot.DisplayName)
+		require.Equal(t, bot.Description, createdBot.Description)
+		require.Equal(t, th.BasicUser.Id, createdBot.OwnerId)
+	})
 
-	// t.Run("create invalid bot", func(t *testing.T) {
-	// 	th := Setup(t).InitBasic()
-	// 	defer th.TearDown()
+	t.Run("create invalid bot", func(t *testing.T) {
+		th := Setup(t).InitBasic()
+		defer th.TearDown()
 
-	// 	th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
-	// 	th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID, false)
-	// 	th.App.UpdateConfig(func(cfg *model.Config) {
-	// 		*cfg.ServiceSettings.EnableBotAccountCreation = true
-	// 	})
+		th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
+		th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID, false)
+		th.App.UpdateConfig(func(cfg *model.Config) {
+			*cfg.ServiceSettings.EnableBotAccountCreation = true
+		})
 
-	// 	_, resp := th.Client.CreateBot(&model.Bot{
-	// 		Username:    "username",
-	// 		DisplayName: "a bot",
-	// 		Description: strings.Repeat("x", 1025),
-	// 	})
+		_, resp := th.Client.CreateBot(&model.Bot{
+			Username:    "username",
+			DisplayName: "a bot",
+			Description: strings.Repeat("x", 1025),
+		})
 
-	// 	CheckErrorMessage(t, resp, "model.bot.is_valid.description.app_error")
-	// })
+		CheckErrorMessage(t, resp, "model.bot.is_valid.description.app_error")
+	})
 
-	// t.Run("bot attempt to create bot fails", func(t *testing.T) {
-	// 	th := Setup(t).InitBasic()
-	// 	defer th.TearDown()
+	t.Run("bot attempt to create bot fails", func(t *testing.T) {
+		th := Setup(t).InitBasic()
+		defer th.TearDown()
 
-	// 	th.App.UpdateConfig(func(cfg *model.Config) {
-	// 		*cfg.ServiceSettings.EnableBotAccountCreation = true
-	// 	})
+		th.App.UpdateConfig(func(cfg *model.Config) {
+			*cfg.ServiceSettings.EnableBotAccountCreation = true
+		})
 
-	// 	th.App.UpdateConfig(func(cfg *model.Config) { *cfg.ServiceSettings.EnableUserAccessTokens = true })
-	// 	th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
-	// 	th.AddPermissionToRole(model.PERMISSION_EDIT_OTHER_USERS.Id, model.TEAM_USER_ROLE_ID)
-	// 	th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID+" "+model.SYSTEM_USER_ACCESS_TOKEN_ROLE_ID, false)
+		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.ServiceSettings.EnableUserAccessTokens = true })
+		th.AddPermissionToRole(model.PERMISSION_CREATE_BOT.Id, model.TEAM_USER_ROLE_ID)
+		th.AddPermissionToRole(model.PERMISSION_EDIT_OTHER_USERS.Id, model.TEAM_USER_ROLE_ID)
+		th.App.UpdateUserRoles(th.BasicUser.Id, model.TEAM_USER_ROLE_ID+" "+model.SYSTEM_USER_ACCESS_TOKEN_ROLE_ID, false)
 
-	// 	bot, resp := th.Client.CreateBot(&model.Bot{
-	// 		Username:    GenerateTestUsername(),
-	// 		DisplayName: "a bot",
-	// 		Description: "bot",
-	// 	})
-	// 	CheckCreatedStatus(t, resp)
-	// 	defer th.App.PermanentDeleteBot(bot.UserId)
-	// 	th.App.UpdateUserRoles(bot.UserId, model.TEAM_USER_ROLE_ID+" "+model.SYSTEM_USER_ACCESS_TOKEN_ROLE_ID, false)
+		bot, resp := th.Client.CreateBot(&model.Bot{
+			Username:    GenerateTestUsername(),
+			DisplayName: "a bot",
+			Description: "bot",
+		})
+		CheckCreatedStatus(t, resp)
+		defer th.App.PermanentDeleteBot(bot.UserId)
+		th.App.UpdateUserRoles(bot.UserId, model.TEAM_USER_ROLE_ID+" "+model.SYSTEM_USER_ACCESS_TOKEN_ROLE_ID, false)
 
-	// 	rtoken, resp := th.Client.CreateUserAccessToken(bot.UserId, "test token")
-	// 	CheckNoError(t, resp)
-	// 	th.Client.AuthToken = rtoken.Token
+		rtoken, resp := th.Client.CreateUserAccessToken(bot.UserId, "test token")
+		CheckNoError(t, resp)
+		th.Client.AuthToken = rtoken.Token
 
-	// 	_, resp = th.Client.CreateBot(&model.Bot{
-	// 		Username:    GenerateTestUsername(),
-	// 		OwnerId:     bot.UserId,
-	// 		DisplayName: "a bot2",
-	// 		Description: "bot2",
-	// 	})
-	// 	CheckErrorMessage(t, resp, "api.context.permissions.app_error")
-	// })
+		_, resp = th.Client.CreateBot(&model.Bot{
+			Username:    GenerateTestUsername(),
+			OwnerId:     bot.UserId,
+			DisplayName: "a bot2",
+			Description: "bot2",
+		})
+		CheckErrorMessage(t, resp, "api.context.permissions.app_error")
+	})
 
 }
 

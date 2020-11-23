@@ -5,7 +5,6 @@ package api4
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -79,7 +78,6 @@ func (api *API) InitChannel() {
 }
 
 func createChannel(c *Context, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Creating the channel")
 	channel := model.ChannelFromJson(r.Body)
 	if channel == nil {
 		c.SetInvalidParam("channel")

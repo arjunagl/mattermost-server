@@ -4,7 +4,6 @@
 package web
 
 import (
-	"fmt"
 	"net/http"
 	"path"
 	"regexp"
@@ -40,7 +39,6 @@ func (c *Context) LogAuditRecWithLevel(rec *audit.Record, level mlog.LogLevel) {
 	if c.Err != nil {
 		rec.AddMeta("err", c.Err.Id)
 		rec.AddMeta("code", c.Err.StatusCode)
-		fmt.Println("7777777777777777777")
 		if c.Err.Id == "api.context.permissions.app_error" {
 			level = app.LevelPerms
 		}
@@ -135,13 +133,11 @@ func (c *Context) SessionRequired() {
 		c.App.Session().Props[model.SESSION_PROP_TYPE] == model.SESSION_TYPE_USER_ACCESS_TOKEN &&
 		c.App.Session().Props[model.SESSION_PROP_IS_BOT] != model.SESSION_PROP_IS_BOT_VALUE {
 
-		fmt.Println("Error location 1")
 		c.Err = model.NewAppError("", "api.context.session_expired.app_error", nil, "UserAccessToken", http.StatusUnauthorized)
 		return
 	}
 
 	if len(c.App.Session().UserId) == 0 {
-		fmt.Println("Error location 2")
 		c.Err = model.NewAppError("", "api.context.session_expired.app_error", nil, "UserRequired", http.StatusUnauthorized)
 		return
 	}

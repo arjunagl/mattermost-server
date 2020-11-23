@@ -238,7 +238,6 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// shape IP:PORT (it will be "@" in Linux, for example)
 		isLocalOrigin := !strings.Contains(r.RemoteAddr, ":")
 		if *c.App.Config().ServiceSettings.EnableLocalMode && isLocalOrigin {
-			fmt.Println("Setting2")
 			c.App.SetSession(&model.Session{Local: true})
 		} else if !isLocalOrigin {
 			c.Err = model.NewAppError("", "api.context.local_origin_required.app_error", nil, "LocalOriginRequired", http.StatusUnauthorized)
@@ -339,7 +338,6 @@ func (h *Handler) checkCSRFToken(c *Context, r *http.Request, token string, toke
 		}
 
 		if !csrfCheckPassed {
-			fmt.Println("Setting2")
 			c.App.SetSession(&model.Session{})
 			c.Err = model.NewAppError("ServeHTTP", "api.context.session_expired.app_error", nil, "token="+token+" Appears to be a CSRF attempt", http.StatusUnauthorized)
 		}

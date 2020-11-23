@@ -108,7 +108,6 @@ func setupTestHelper(dbStore store.Store, searchEngine *searchengine.Broker, ent
 		options = append(options, app.StoreOverride(dbStore))
 	}
 
-	fmt.Println("Setting up test helper")
 	s, err := app.NewServer(options...)
 
 	if err != nil {
@@ -242,7 +241,6 @@ func SetupConfig(tb testing.TB, updateConfig func(cfg *model.Config)) *TestHelpe
 }
 
 func SetupConfigWithStoreMock(tb testing.TB, updateConfig func(cfg *model.Config)) *TestHelper {
-	fmt.Println("setting up configstore with mock")
 	th := setupTestHelper(testlib.GetMockStoreForSetupFunctions(), nil, false, false, updateConfig)
 	emptyMockStore := mocks.Store{}
 	emptyMockStore.On("Close").Return(nil)
@@ -251,7 +249,6 @@ func SetupConfigWithStoreMock(tb testing.TB, updateConfig func(cfg *model.Config
 }
 
 func SetupWithStoreMock(tb testing.TB) *TestHelper {
-	fmt.Println("SetupWithStoreMock")
 	th := setupTestHelper(testlib.GetMockStoreForSetupFunctions(), nil, false, false, nil)
 	emptyMockStore := mocks.Store{}
 	emptyMockStore.On("Close").Return(nil)
@@ -355,7 +352,6 @@ func (me *TestHelper) InitLogin() *TestHelper {
 func (me *TestHelper) InitBasic() *TestHelper {
 	me.BasicTeam = me.CreateTeam()
 	me.BasicChannel = me.CreatePublicChannel()
-	fmt.Println("Done setting up")
 	me.BasicPrivateChannel = me.CreatePrivateChannel()
 	me.BasicPrivateChannel2 = me.CreatePrivateChannel()
 	me.BasicDeletedChannel = me.CreatePublicChannel()
