@@ -90,7 +90,7 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 		}
 	}
 
-	if session.Id == "" {
+	if session == nil || session.Id == "" {
 		session, err = a.createSessionForUserAccessToken(token)
 		if err != nil {
 			detailedError := ""
