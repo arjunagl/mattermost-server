@@ -519,8 +519,10 @@ func (a *App) RegenerateOAuthAppSecret(app *model.OAuthApp) (*model.OAuthApp, *m
 func (a *App) RevokeAccessToken(token string) *model.AppError {
 	session, _ := a.GetSession(token)
 	defer func() {
-		session.Id = ""
-		UserSessionPool.Put(session)
+		if session != nil {
+			session.Id = ""
+			UserSessionPool.Put(session)
+		}
 	}()
 
 	schan := make(chan error, 1)
