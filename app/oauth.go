@@ -521,7 +521,7 @@ func (a *App) RevokeAccessToken(token string) *model.AppError {
 	defer func() {
 		if session != nil {
 			session.Id = ""
-			UserSessionPool.Put(session)
+			// UserSessionPool.Put(session)
 		}
 	}()
 

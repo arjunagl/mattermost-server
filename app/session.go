@@ -73,7 +73,7 @@ func (a *App) GetSession(token string) (*model.Session, *model.AppError) {
 		}
 	}
 
-	if session.Id == "" {
+	if session == nil || session.Id == "" {
 		var nErr error
 		if session, nErr = a.Srv().Store.Session().Get(token); nErr == nil {
 			if session != nil {

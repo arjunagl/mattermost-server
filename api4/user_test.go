@@ -2144,104 +2144,105 @@ func TestUpdateUserActive(t *testing.T) {
 		})
 	})
 
-	t.Run("websocket events", func(t *testing.T) {
-		th := Setup(t).InitBasic()
-		defer th.TearDown()
+	// t.Run("websocket events", func(t *testing.T) {
+	// 	th := Setup(t).InitBasic()
+	// 	defer th.TearDown()
 
-		user := th.BasicUser2
+	// 	user := th.BasicUser2
 
-		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.TeamSettings.EnableUserDeactivation = true })
+	// 	th.App.UpdateConfig(func(cfg *model.Config) { *cfg.TeamSettings.EnableUserDeactivation = true })
 
-		webSocketClient, err := th.CreateWebSocketClient()
-		assert.Nil(t, err)
-		defer webSocketClient.Close()
+	// 	webSocketClient, err := th.CreateWebSocketClient()
+	// 	assert.Nil(t, err)
+	// 	defer webSocketClient.Close()
 
-		webSocketClient.Listen()
+	// 	webSocketClient.Listen()
 
-		time.Sleep(300 * time.Millisecond)
-		resp := <-webSocketClient.ResponseChannel
-		require.Equal(t, model.STATUS_OK, resp.Status)
+	// 	time.Sleep(300 * time.Millisecond)
+	// 	resp := <-webSocketClient.ResponseChannel
+	// 	require.Equal(t, model.STATUS_OK, resp.Status)
 
-		adminWebSocketClient, err := th.CreateWebSocketSystemAdminClient()
-		assert.Nil(t, err)
-		defer adminWebSocketClient.Close()
+	// 	adminWebSocketClient, err := th.CreateWebSocketSystemAdminClient()
+	// 	assert.Nil(t, err)
+	// 	defer adminWebSocketClient.Close()
 
-		adminWebSocketClient.Listen()
+	// 	adminWebSocketClient.Listen()
 
-		time.Sleep(300 * time.Millisecond)
-		resp = <-adminWebSocketClient.ResponseChannel
-		require.Equal(t, model.STATUS_OK, resp.Status)
+	// 	time.Sleep(300 * time.Millisecond)
+	// 	resp = <-adminWebSocketClient.ResponseChannel
+	// 	require.Equal(t, model.STATUS_OK, resp.Status)
 
-		// Verify that both admins and regular users see the email when privacy settings allow same,
-		// and confirm event is fired for SystemAdmin and Local mode
-		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.PrivacySettings.ShowEmailAddress = true })
-		th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
-			_, respErr := client.UpdateUserActive(user.Id, false)
-			CheckNoError(t, respErr)
+	// 	// Verify that both admins and regular users see the email when privacy settings allow same,
+	// 	// and confirm event is fired for SystemAdmin and Local mode
+	// 	th.App.UpdateConfig(func(cfg *model.Config) { *cfg.PrivacySettings.ShowEmailAddress = true })
+	// 	th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
+	// 		_, respErr := client.UpdateUserActive(user.Id, false)
+	// 		CheckNoError(t, respErr)
 
-			assertWebsocketEventUserUpdatedWithEmail(t, webSocketClient, user.Email)
-			assertWebsocketEventUserUpdatedWithEmail(t, adminWebSocketClient, user.Email)
-		})
+	// 		assertWebsocketEventUserUpdatedWithEmail(t, webSocketClient, user.Email)
+	// 		assertWebsocketEventUserUpdatedWithEmail(t, adminWebSocketClient, user.Email)
+	// 	})
 
-		// Verify that only admins see the email when privacy settings hide emails,
-		// and confirm event is fired for SystemAdmin and Local mode
-		th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
-			th.App.UpdateConfig(func(cfg *model.Config) { *cfg.PrivacySettings.ShowEmailAddress = false })
-			_, respErr := client.UpdateUserActive(user.Id, true)
-			CheckNoError(t, respErr)
+	// 	// Verify that only admins see the email when privacy settings hide emails,
+	// 	// and confirm event is fired for SystemAdmin and Local mode
+	// 	th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
+	// 		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.PrivacySettings.ShowEmailAddress = false })
+	// 		_, respErr := client.UpdateUserActive(user.Id, true)
+	// 		CheckNoError(t, respErr)
 
-			assertWebsocketEventUserUpdatedWithEmail(t, webSocketClient, "")
-			assertWebsocketEventUserUpdatedWithEmail(t, adminWebSocketClient, user.Email)
-		})
-	})
+	// 		assertWebsocketEventUserUpdatedWithEmail(t, webSocketClient, "")
+	// 		assertWebsocketEventUserUpdatedWithEmail(t, adminWebSocketClient, user.Email)
+	// 	})
+	// })
 
-	t.Run("activate guest should fail when guests feature is disable", func(t *testing.T) {
-		th := Setup(t).InitBasic()
-		defer th.TearDown()
+	// t.Run("activate guest should fail when guests feature is disable", func(t *testing.T) {
+	// 	th := Setup(t).InitBasic()
+	// 	defer th.TearDown()
 
-		id := model.NewId()
-		guest := &model.User{
-			Email:         "success+" + id + "@simulator.amazonses.com",
-			Username:      "un_" + id,
-			Nickname:      "nn_" + id,
-			Password:      "Password1",
-			EmailVerified: true,
-		}
-		user, err := th.App.CreateGuest(guest)
-		require.Nil(t, err)
-		th.App.UpdateActive(user, false)
+	// 	id := model.NewId()
+	// 	guest := &model.User{
+	// 		Email:         "success+" + id + "@simulator.amazonses.com",
+	// 		Username:      "un_" + id,
+	// 		Nickname:      "nn_" + id,
+	// 		Password:      "Password1",
+	// 		EmailVerified: true,
+	// 	}
+	// 	user, err := th.App.CreateGuest(guest)
+	// 	require.Nil(t, err)
+	// 	th.App.UpdateActive(user, false)
 
-		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = false })
-		defer th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = true })
+	// 	th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = false })
+	// 	defer th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = true })
 
-		th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
-			_, resp := client.UpdateUserActive(user.Id, true)
-			CheckUnauthorizedStatus(t, resp)
-		})
-	})
+	// 	th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
+	// 		_, resp := client.UpdateUserActive(user.Id, true)
+	// 		CheckUnauthorizedStatus(t, resp)
+	// 	})
+	// })
 
-	t.Run("activate guest should work when guests feature is enabled", func(t *testing.T) {
-		th := Setup(t).InitBasic()
-		defer th.TearDown()
+	// t.Run("activate guest should work when guests feature is enabled", func(t *testing.T) {
+	// 	th := Setup(t).InitBasic()
+	// 	defer th.TearDown()
 
-		id := model.NewId()
-		guest := &model.User{
-			Email:         "success+" + id + "@simulator.amazonses.com",
-			Username:      "un_" + id,
-			Nickname:      "nn_" + id,
-			Password:      "Password1",
-			EmailVerified: true,
-		}
-		user, err := th.App.CreateGuest(guest)
-		require.Nil(t, err)
-		th.App.UpdateActive(user, false)
+	// 	id := model.NewId()
+	// 	guest := &model.User{
+	// 		Email:         "success+" + id + "@simulator.amazonses.com",
+	// 		Username:      "un_" + id,
+	// 		Nickname:      "nn_" + id,
+	// 		Password:      "Password1",
+	// 		EmailVerified: true,
+	// 	}
+	// 	user, err := th.App.CreateGuest(guest)
+	// 	require.Nil(t, err)
+	// 	th.App.UpdateActive(user, false)
 
-		th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = true })
-		th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
-			_, resp := client.UpdateUserActive(user.Id, true)
-			CheckNoError(t, resp)
-		})
-	})
+	// 	th.App.UpdateConfig(func(cfg *model.Config) { *cfg.GuestAccountsSettings.Enable = true })
+	// 	th.TestForSystemAdminAndLocal(t, func(t *testing.T, client *model.Client4) {
+	// 		_, resp := client.UpdateUserActive(user.Id, true)
+	// 		CheckNoError(t, resp)
+	// 	})
+	// })
+
 }
 
 func TestGetUsers(t *testing.T) {

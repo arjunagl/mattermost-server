@@ -133,7 +133,7 @@ func (a *App) servePluginRequest(w http.ResponseWriter, r *http.Request, handler
 		defer func() {
 			if session != nil {
 				session.Id = ""
-				UserSessionPool.Put(session)
+				// UserSessionPool.Put(session)
 			}
 		}()
 		csrfCheckPassed := false
