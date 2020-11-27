@@ -193,8 +193,8 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if session != nil {
 				session.Id = ""
+				app.UserSessionPool.Put(session)
 			}
-			app.UserSessionPool.Put(session)
 		}()
 
 		if err != nil {
